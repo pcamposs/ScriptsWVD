@@ -36,30 +36,30 @@ $SessionHosts = @(Get-AzWvdSessionHost -ResourceGroupName $ResourceGroupName -Ho
 $Quantity=2
 $checkdate = Get-Date
 if($checkdate.DayOfWeek -eq "Saturday" -or $checkdate.DayOfWeek -eq "Sunday"){$Quantity=1}
-$disponibles=0
-$encendidos=0
+$Availables=0
+$Runnings=0
 $Vms=@()
 $SessionHosts | ForEach-Object{
     if($_.Status -eq "Unavailable")
     {
-        $nombre=$_.Name.Split('/')[-1].Replace($domain,"")
-        $disponibles++
-        $Vms+=$nombre
+        $ShortName=$_.Name.Split('/')[-1].Replace($domain,"")
+        $Availables++
+        $Vms+=$ShortName
     }
     elseif($_.Status -eq "Available" -and $_.AllowNewSession -eq $true) {
-        $encendidos++
+        $Runnings++
     }
 }
 
-if($Quantity -gt $encendidos){
-    For ($i=0; $i -le ($disponibles-$Quantity); $i++) {
-        $SessionHostName = $Vms[$i]+$dominio 
+if($Quantity -gt $Runnings){
+    For ($i=0; $i -le ($Availables-$Quantity); $i++) {
+        $SessionHostName = $Vms[$i]+$domain 
         $Vmname=$Vms[$i].ToString()
         #$SessionHostName="VM-0"
-        $actualiza=Update-AzWvdSessionHost -ResourceGroupName $ResourceGroupName -HostPoolName $HostPoolName -Name $SessionHostName -AllowNewSession:$true
-        $prende=Start-AzVM -ResourceGroupName $ResourceGroupName -Name $Vmname
+        $UpdateAllowNewSession=Update-AzWvdSessionHost -ResourceGroupName $ResourceGroupName -HostPoolName $HostPoolName -Name $SessionHostName -AllowNewSession:$true
+        $StartVM=Start-AzVM -ResourceGroupName $ResourceGroupName -Name $Vmname
         Write-Output "Starting $SessionHostName" 
     }
 }
-Write-Output "Detected $encendidos Running"
-Write-Output "Detectad $disponibles Available to Start"
+Write-Output "Detected $Runnings Running"
+Write-Output "Detectad $Availables Available to Start"
