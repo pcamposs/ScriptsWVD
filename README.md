@@ -14,4 +14,9 @@ This script Start a number X of Vms from the pool Before the Rush Hour, but, it 
 
 You can change the numbers the Vms to start on WeekDay (Default) and the Weekend days
 
+## Prerequisites
+
+Automation Account 
+Import Az.DesktopVirtualization az.Compute az.Accounts to Runbook 
+
 
