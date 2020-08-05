@@ -4,7 +4,7 @@ The main objective of this script is support the Rush Hour, putting available X 
 
 The intent of this Script is a Complement of the Auto Scale Microsoft Script https://docs.microsoft.com/en-us/azure/virtual-desktop/set-up-scaling-script
 
-##What it is the dieference between a Common Start VM Script and this Script? 
+## What it is the dieference between a Common Start VM Script and this Script? 
 
 This Script asume that you have Running the Microsoft Autoscale Script, with that your machines are Stopped in Off Peak Our, leaving a couple of Vm Running (Ejemple 2 of 20).
 
