@@ -1,9 +1,10 @@
 Disable-AzContextAutosave –Scope Process
 
-$TenantID="72f988bf-86f1-41af-91ab-2d7cd011db47"
-$dominio=".test.local"
-$ResourceGroupName="WRD"
-$HostPoolName="PoolW10"
+$TenantID="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+#Format .XXXX.XX
+$domain=".test.local"
+$ResourceGroupName="XXXX"
+$HostPoolName="YYYY"
 
 $connectionName = "AzureRunAsConnection"
 try
@@ -29,19 +30,19 @@ catch {
     }
 }
 
-$contexto=Set-AzContext -TenantId $TenantID
+$context=Set-AzContext -TenantId $TenantID
 
 $SessionHosts = @(Get-AzWvdSessionHost -ResourceGroupName $ResourceGroupName -HostPoolName $HostPoolName)
-$Cantidad=2
+$Quantity=2
 $checkdate = Get-Date
-if($checkdate.DayOfWeek -eq "Saturday" -or $checkdate.DayOfWeek -eq "Sunday"){$Cantidad=1}
+if($checkdate.DayOfWeek -eq "Saturday" -or $checkdate.DayOfWeek -eq "Sunday"){$Quantity=1}
 $disponibles=0
 $encendidos=0
 $Vms=@()
 $SessionHosts | ForEach-Object{
     if($_.Status -eq "Unavailable")
     {
-        $nombre=$_.Name.Split('/')[-1].Replace($dominio,"")
+        $nombre=$_.Name.Split('/')[-1].Replace($domain,"")
         $disponibles++
         $Vms+=$nombre
     }
@@ -50,15 +51,15 @@ $SessionHosts | ForEach-Object{
     }
 }
 
-if($Cantidad -gt $encendidos){
-    For ($i=0; $i -le ($disponibles-$cantidad); $i++) {
+if($Quantity -gt $encendidos){
+    For ($i=0; $i -le ($disponibles-$Quantity); $i++) {
         $SessionHostName = $Vms[$i]+$dominio 
         $Vmname=$Vms[$i].ToString()
         #$SessionHostName="VM-0"
         $actualiza=Update-AzWvdSessionHost -ResourceGroupName $ResourceGroupName -HostPoolName $HostPoolName -Name $SessionHostName -AllowNewSession:$true
         $prende=Start-AzVM -ResourceGroupName $ResourceGroupName -Name $Vmname
-       Write-Output "Encendiendo $SessionHostName" 
+        Write-Output "Starting $SessionHostName" 
     }
 }
-Write-Output "Detectadas $encendidos Encendidas"
-Write-Output "Detectadas $disponibles Disponibles para encender"
+Write-Output "Detected $encendidos Running"
+Write-Output "Detectad $disponibles Available to Start"
