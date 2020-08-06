@@ -35,12 +35,14 @@ $context=Set-AzContext -TenantId $TenantID
 #Get the list of Session host of the pool 
 $SessionHosts = @(Get-AzWvdSessionHost -ResourceGroupName $ResourceGroupName -HostPoolName $HostPoolName)
 #How many Vms I want to be running at Schedule 
-# If there is 1 VM Running, the script Will Start 1 VM to reach de $Quantity
+# If there is 1 VM Running, the script Will Start 1 VM to reach The $Quantity
 $Quantity=2
 
 #Different Quantity for weekend due the low usage 
 $checkdate = Get-Date
-if($checkdate.DayOfWeek -eq "Saturday" -or $checkdate.DayOfWeek -eq "Sunday"){$Quantity=1}
+if($checkdate.DayOfWeek -eq "Saturday" -or $checkdate.DayOfWeek -eq "Sunday"){
+    $Quantity=1
+}
 
 $Availables=0
 $Runnings=0
@@ -63,8 +65,8 @@ $SessionHosts | ForEach-Object{
     }
 }
 Write-Output "Detected $Runnings Running"
-Write-Output "Detectad $Availables Available to Start"
-Write-Output "I Will Start $Quantity-$Runnings VMS"
+Write-Output "Detected $Availables Available to Start"
+Write-Output "I Will Start "+$Quantity-$Runnings+" VMS"
 if($Quantity -gt $Runnings){
     For ($i=0; $i -lt ($Quantity-$Runnings); $i++) {
         $SessionHostName = $Vms[$i]+$domain 
