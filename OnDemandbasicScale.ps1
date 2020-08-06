@@ -1,4 +1,7 @@
+
 Disable-AzContextAutosave –Scope Process
+
+## V 0.01
 
 $TenantID="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 #Format .XXXX.XX
@@ -66,7 +69,7 @@ $SessionHosts | ForEach-Object{
 }
 Write-Output "Detected $Runnings Running"
 Write-Output "Detected $Availables Available to Start"
-Write-Output "I Will Start "+$Quantity-$Runnings+" VMS"
+Write-Output "I Will Start $($Quantity-$Runnings) VMS"
 if($Quantity -gt $Runnings){
     For ($i=0; $i -lt ($Quantity-$Runnings); $i++) {
         $SessionHostName = $Vms[$i]+$domain 
