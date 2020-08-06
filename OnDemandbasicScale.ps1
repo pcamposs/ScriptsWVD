@@ -30,27 +30,41 @@ catch {
     }
 }
 
+#Set te context for multi tenant account
 $context=Set-AzContext -TenantId $TenantID
-
+#Get the list of Session host of the pool 
 $SessionHosts = @(Get-AzWvdSessionHost -ResourceGroupName $ResourceGroupName -HostPoolName $HostPoolName)
+#How many Vms I want to be running at Schedule 
+# If there is 1 VM Running, the script Will Start 1 VM to reach de $Quantity
 $Quantity=2
+
+#Different Quantity for weekend due the low usage 
 $checkdate = Get-Date
 if($checkdate.DayOfWeek -eq "Saturday" -or $checkdate.DayOfWeek -eq "Sunday"){$Quantity=1}
+
 $Availables=0
 $Runnings=0
 $Vms=@()
+
 $SessionHosts | ForEach-Object{
     if($_.Status -eq "Unavailable")
     {
         $ShortName=$_.Name.Split('/')[-1].Replace($domain,"")
-        $Availables++
-        $Vms+=$ShortName
+        #Validate the VM Status 
+        $VmStatus=Get-AzVM -ResourceGroupName $ResourceGroupName -Name $ShortName -Status
+        if($VmStatus.Statuses[1].DisplayStatus -eq "VM deallocated" -and $VmStatus.Statuses[0].DisplayStatus -eq "Provisioning succeeded"){
+            $Availables++
+            # Arrays of Vms in State Unavailable And (Stop Deallocated)
+            $Vms+=$ShortName
+        }
     }
     elseif($_.Status -eq "Available" -and $_.AllowNewSession -eq $true) {
         $Runnings++
     }
 }
-
+Write-Output "Detected $Runnings Running"
+Write-Output "Detectad $Availables Available to Start"
+Write-Output "I Will Start $Quantity-$Runnings VMS"
 if($Quantity -gt $Runnings){
     For ($i=0; $i -lt ($Quantity-$Runnings); $i++) {
         $SessionHostName = $Vms[$i]+$domain 
@@ -61,5 +75,3 @@ if($Quantity -gt $Runnings){
         Write-Output "Starting $SessionHostName" 
     }
 }
-Write-Output "Detected $Runnings Running"
-Write-Output "Detectad $Availables Available to Start"
