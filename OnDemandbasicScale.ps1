@@ -52,7 +52,7 @@ $SessionHosts | ForEach-Object{
 }
 
 if($Quantity -gt $Runnings){
-    For ($i=0; $i -le ($Quantity-$Runnings); $i++) {
+    For ($i=0; $i -lt ($Quantity-$Runnings); $i++) {
         $SessionHostName = $Vms[$i]+$domain 
         $Vmname=$Vms[$i].ToString()
         #$SessionHostName="VM-0"
