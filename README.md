@@ -20,4 +20,5 @@ Automation Account
 
 Import Az.DesktopVirtualization az.Compute az.Accounts to Runbook 
 
-
+## Change log 
+ 0.01 Initial Release
