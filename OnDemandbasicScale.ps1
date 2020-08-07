@@ -1,13 +1,25 @@
 
 Disable-AzContextAutosave –Scope Process
 
-## V 0.02-t
+## V 0.03-t
 
+Param 
+    (    
+        [Parameter(Mandatory=$true)][ValidateNotNullOrEmpty()] 
+        [String] 
+        $domain, 
+        [Parameter(Mandatory=$true)][ValidateNotNullOrEmpty()] 
+        [String] 
+        $ResourceGroupName, 
+        [Parameter(Mandatory=$true)][ValidateNotNullOrEmpty()] 
+        [String] 
+        $HostPoolName 
+    ) 
 
 #Format .XXXX.XX
-$domain=".test.local"
-$ResourceGroupName="XXXX"
-$HostPoolName="YYYY"
+#$domain=".test.local"
+#$ResourceGroupName="XXXX"
+#$HostPoolName="YYYY"
 
 $connectionName = "AzureRunAsConnection"
 try
