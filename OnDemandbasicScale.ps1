@@ -1,9 +1,9 @@
 
 Disable-AzContextAutosave –Scope Process
 
-## V 0.01-t
+## V 0.02-t
 
-$TenantID="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+
 #Format .XXXX.XX
 $domain=".test.local"
 $ResourceGroupName="XXXX"
@@ -33,8 +33,6 @@ catch {
     }
 }
 
-#Set te context for multi tenant account
-$context=Set-AzContext -TenantId $TenantID
 #Get the list of Session host of the pool 
 $SessionHosts = @(Get-AzWvdSessionHost -ResourceGroupName $ResourceGroupName -HostPoolName $HostPoolName)
 #How many Vms I want to be running at Schedule 
